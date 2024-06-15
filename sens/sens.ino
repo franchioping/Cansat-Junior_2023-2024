@@ -34,7 +34,7 @@ typedef struct transData {
 } transData;
 
 // Initialize our Data Structure. we write over it every time to avoid mallocing memory repeatedly
-transData theData;
+transData TransmissionData;
 
 
 /*
