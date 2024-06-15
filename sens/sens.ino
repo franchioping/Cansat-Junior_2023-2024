@@ -97,11 +97,12 @@ void init_pressure_failsafe(){
   */
   bool sucess_pressure = false;
   for(int i = 0; i < INIT_RETRIES; i++){
-    sucess_temperature = bmp.begin(BMP085_ULTRAHIGHRES);
-    if(sucess_temperature){
+    sucess_pressure = bmp.begin(BMP085_ULTRAHIGHRES);
+    if(sucess_pressure){
       Serial.println("BMP180 initialized succesfully on attempt ", i)
       break;
     }
+    delay(50);
   }
 }
 
@@ -229,6 +230,7 @@ void init_temperature_failsafe(){
       Serial.println("DS18B20 initialized succesfully on attempt ", i)
       break;
     }
+    delay(50);
   }
 }
 
@@ -257,10 +259,18 @@ void init_radio_failsafe(){
       Serial.println("RF69 initialized succesfully on attempt ", i)
       break;
     }
+    delay(50);
   }
 
 
   radio.setHighPower();
+
+
+
 }
+
+
+
+
 
 
