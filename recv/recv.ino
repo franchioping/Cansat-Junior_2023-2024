@@ -116,10 +116,11 @@ void loop() {
       */
       char* data_string = (char*) malloc(radio.DATALEN+1);
       if(data_string != NULL){
-        memcpy(data_string, radio)
+        memcpy(data_string, radio, radio.DATALEN);
         data_string[radio.DATALEN] = '\0';
 
         Serial.println(data_string);
+        free(data_string);
       }else{
         Serial.print("Failed to malloc string, not printing the packet");
       }
