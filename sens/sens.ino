@@ -73,7 +73,7 @@ void loop() {
   /*
     Print out data for debug purposes
   */
-  Serial.println("Current Data is:")
+  Serial.println("Current Data is:");
   Serial.println(TransmissionData.temperature);
   Serial.println(TransmissionData.pressure);
   Serial.println(TransmissionData.time);
@@ -82,7 +82,7 @@ void loop() {
     Send all of our struct
   */
   Serial.print("SENDING...");
-  radio.send(GATEWAYID, (const void *)&TransmissionData, sizeof(TransmissionData));~
+  radio.send(GATEWAYID, (const void *)&TransmissionData, sizeof(TransmissionData));
   Serial.println("SENT!");
 
 }
@@ -99,7 +99,8 @@ void init_pressure_failsafe(){
   for(int i = 0; i < INIT_RETRIES; i++){
     sucess_pressure = bmp.begin(BMP085_ULTRAHIGHRES);
     if(sucess_pressure){
-      Serial.println("BMP180 initialized succesfully on attempt ", i)
+      Serial.print("BMP180 initialized succesfully on attempt ");
+      Serial.println(i);
       break;
     }
     delay(50);
@@ -227,7 +228,8 @@ void init_temperature_failsafe(){
   for(int i = 0; i < INIT_RETRIES; i++){
     sucess_temperature = init_temperature();
     if(sucess_temperature){
-      Serial.println("DS18B20 initialized succesfully on attempt ", i)
+      Serial.print("DS18B20 initialized succesfully on attempt ");
+      Serial.println(i);
       break;
     }
     delay(50);
@@ -256,7 +258,8 @@ void init_radio_failsafe(){
   for(int i = 0; i < INIT_RETRIES; i++){
     sucess = radio.initialize(FREQUENCY,NODEID,NETWORKID);
     if(sucess){
-      Serial.println("RF69 initialized succesfully on attempt ", i)
+      Serial.print("RF69 initialized succesfully on attempt ");
+      Serial.println(i);
       break;
     }
     delay(50);
