@@ -116,7 +116,7 @@ void loop() {
       */
       char* data_string = (char*) malloc(radio.DATALEN+1);
       if(data_string != NULL){
-        memcpy(data_string, radio, radio.DATALEN);
+        memcpy(data_string, radio.DATA, radio.DATALEN);
         data_string[radio.DATALEN] = '\0';
 
         Serial.println(data_string);
@@ -137,9 +137,9 @@ void loop() {
         uptime is included to help with data analasys
       */
       theData = *(transData*) radio.DATA;
-      Serial.print(" temperature=");
+      Serial.print(" temperature:");
       Serial.print(theData.temperature);
-      Serial.print(" pressure=");
+      Serial.print(" pressure:");
       Serial.print(theData.pressure);
       Serial.print(" time=");
       Serial.print(theData.time);

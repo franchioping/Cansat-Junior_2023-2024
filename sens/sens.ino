@@ -2,7 +2,14 @@
 #include <RFM69.h>    
 #include <OneWire.h>
 
+
+#define CJKIT_VERSION 2
+#include <CJKit.h>
+
 #define DALLASPIN 4
+
+OneWire ds(DALLASPIN);
+
 
 #define NODEID           2
 #define NETWORKID        100
@@ -11,10 +18,11 @@
 
 #define INIT_RETRIES 10
 
+const uint32_t RADIO_FREQUENCY = 433000000; // Hz
+
 RFM69 radio;
 void init_radio_failsafe();
 
-OneWire ds(DALLASPIN);
 void init_temperature_failsafe();
 bool init_temperature();
 float get_temperature();
@@ -52,6 +60,10 @@ void(* resetFunc) (void) = 0;
 
 void setup() {
   Serial.begin(9600);
+
+
+  pinMode(5, OUTPUT);           // set pin to input
+
  
 
   init_pressure_failsafe();
@@ -62,7 +74,7 @@ void setup() {
 
 void loop() {
   
-  /*
+  /*ss
     Load all of our data into the struct,
     Don't allocate/free everytime for performace 
   */
@@ -83,7 +95,11 @@ void loop() {
   */
   Serial.print("SENDING...");
   radio.send(GATEWAYID, (const void *)&TransmissionData, sizeof(TransmissionData));
+  digitalWrite(5, HIGH);
+  delay(10);
+  digitalWrite(5, LOW);
   Serial.println("SENT!");
+  delay(40);
 
 }
 
@@ -135,6 +151,7 @@ float get_pressure(){
    8.   CRC
 
 */
+
 
 float get_temperature(){
   int16_t temp;
@@ -217,6 +234,7 @@ bool init_temperature()
   return true;
 }
 
+
 void init_temperature_failsafe(){
   /*
     Temperature sensor sometimes doesnt like to work (when it's pushed around and doen't make contact)
@@ -239,6 +257,8 @@ void init_temperature_failsafe(){
 /* RF69 (Communication) */
 
 void init_radio_failsafe(){
+ 
+
   /*  
     Set Chip-Select pin for the radio.
     The RF69 uses the SPI interface for communication so each chip requires its own chip-select
@@ -247,30 +267,24 @@ void init_radio_failsafe(){
 
   /*
     Set the Interrupt pin for the radio - Connected to DIO0 (Digital IO 0).
-    This pin is programmed as an interrupt for receive data by the RFM69 library
+    This pin is programmed as an interrupt for recieving data by the RFM69 library
 
     All other interrupts are programatically disabled so we only need to set this one
-    BUUUT we don't actually need it at all, since were just sending without ACKs (acknowledgements) there's no need to receive data
   */
   radio.setIrq(3);
 
-  bool sucess = false;
-  for(int i = 0; i < INIT_RETRIES; i++){
-    sucess = radio.initialize(FREQUENCY,NODEID,NETWORKID);
-    if(sucess){
-      Serial.print("RF69 initialized succesfully on attempt ");
-      Serial.println(i);
-      break;
-    }
-    delay(50);
-  }
-
-
+  /*
+    Initializes radio and returns 1 if it is successful
+  */
+  bool sucess = radio.initialize(FREQUENCY,NODEID,NETWORKID);
   radio.setHighPower();
 
-
-
+  Serial.print("RADIO INITIALIZE: ");
+  Serial.println(sucess);
 }
+
+
+
 
 
 
