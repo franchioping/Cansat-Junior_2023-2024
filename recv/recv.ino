@@ -9,7 +9,7 @@
 
 
 // Listen in on packets even if they weren't meant for us
-bool spy = true;
+bool spy = false;
 
 RFM69 radio;
 
